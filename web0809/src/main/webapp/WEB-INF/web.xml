@@ -6,6 +6,15 @@
   <!-- 우리가 작성한 서블릿은 .class 형태로 보안디렉토리인 WEB_INF에 들어있을므로 브라우저에서 주소깁력하여
   직접 접근이 불가능하다. 즉 내부적으로 누군가가 연결해줘야 하는데 이때 사용되는 설정이 서브릿매핑이다 -->
   
+  <servlet>
+  	<servlet-name>editServlet</servlet-name>
+  	<servlet-class>com.aca.web0809.board.EditServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>editServlet</servlet-name>
+  	<url-pattern>/board/edit</url-pattern>
+  </servlet-mapping>
   
   	
   	<servlet>
