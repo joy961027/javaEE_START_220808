@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.aca.web0810.model.BoardDAO;
+
 public class RegistServlet extends HttpServlet {
 	
 	@Override
@@ -41,6 +43,7 @@ public class RegistServlet extends HttpServlet {
 		
 		//이 시점부터는 절대로 자바클래스안에, 추후 변경 가능성이 큰 자원의 정보는 기재하지 않는다.
 		//검색을 담당하는 검색 객체 생성 (jndi)
+
 		Connection con =null;
 		PreparedStatement pstmt=null;
 		PrintWriter out = response.getWriter();

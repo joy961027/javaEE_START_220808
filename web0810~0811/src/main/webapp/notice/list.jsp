@@ -1,4 +1,15 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.aca.web0810.model.BoardDAO"%>
+<%@page import="com.aca.web0811.domain.Board"%>
+<%@page import="java.util.List"%>
+<%@page import="java.sql.ResultSet"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%
+	//직접 쿼리문을 수행하지 말고, 이미 만들어놓은 dao를 이용하자
+	BoardDAO boardDAO = new BoardDAO();
+	List<Board>boardlist = boardDAO.selectAll();
+
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,13 +48,14 @@ addEventListener("load",function(){
 			<th width="10%">Regdate</th>
 			<th width="5%">Hit</th>
 		</tr>
-		<%for (int i = 1; i <= 10; i++) {%>
+		
+		<%for(int i=0; i<boardlist.size(); i++)  {%>
 		<tr>
-			<td>Jill</td>
-			<td>Smith</td>
-			<td>50</td>
-			<td>2</td>
-			<td>3</td>
+			<td>No</td>
+			<td><a href="/notice/content.jsp?board_id=<%=boardlist.get(i).getBoard_id()%>"><%=boardlist.get(i).getTitle()%></a></td>
+			<td><%=boardlist.get(i).getWriter()%></td>
+			<td><%=boardlist.get(i).getRegdate().substring(0,10) %></td>
+			<td><%=boardlist.get(i).getHit()%></td>
 		</tr>
 		<%}%>
 		<tr>

@@ -35,7 +35,7 @@ String password="1234";
 		<%while(rs.next()){ %>
 		<tr>
 			<td>No</td>
-			<td><a href="/board/content.jsp?board_id=<%=rs.getInt("board_id")%>"><%=rs.getString("title")%></a></td>
+			<td><a href="/web0809/board/content.jsp?board_id=<%=rs.getInt("board_id")%>"><%=rs.getString("title")%></a></td>
 			<td><%=rs.getString("writer")%></td>
 			<td><%=rs.getString("regdate")%></td>
 			<td><%=rs.getInt("hit")%></td>
@@ -45,7 +45,7 @@ String password="1234";
 			<td colspan="5" align="right">
 			<!-- 하나의 문서내에서 생성되는 객체를 dom(document object model)이라 하고 문서 밖에서 브라우저를 제어하기 위해 생성되는 객체들을 가리켜
 			비공식적으로 bom(browser object model) -->
-				<button onClick="location.href='/board/regist.jsp'">글 등록</button>
+				<button onClick="location.href='/web0809/board/regist.jsp'">글 등록</button>
 			</td>
 		</tr>
 	</table>

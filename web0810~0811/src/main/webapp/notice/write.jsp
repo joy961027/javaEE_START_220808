@@ -60,6 +60,7 @@ function regist(){
 			<input type="text" id="lname" name="writer" placeholder="작성자입력...">
 			<textarea id="subject" name="content" placeholder="내용 입력.." style="height: 200px"></textarea>
 			<input type="button" value="Submit" onClick="regist()">
+			
 		</form>
 	</div>
 

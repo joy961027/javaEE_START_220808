@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.aca.web0810.model.BoardManager;
+import com.aca.web0810.model.BoardDAO;
+import com.aca.web0811.domain.Board;
 
 /* 웹 기반이 아닌 독립 실행형 기반의 gui모드로 등록폼을 정의하자 
  	
@@ -20,14 +22,14 @@ public class FormWin extends JFrame {
 	JTextField t_writer;
 	JTextArea t_content;
 	JButton bt; /*has a관계 : 객체가 다른 객체를 멤버로 보유한 관계*/
-	BoardManager bm;
+	BoardDAO bm;
 	public FormWin() {
 		t_title = new JTextField(17);
 		t_writer = new JTextField(17);
 		t_content = new JTextArea(10, 23);
 		t_content.setBackground(Color.yellow);
 		bt = new JButton("등록");
-		bm = new BoardManager();
+		bm = new BoardDAO();
 		//레이아웃 스타일 명시
 		this.setLayout(new FlowLayout());//일렬로 배치되는 레이아웃
 		add(t_title);
@@ -45,6 +47,7 @@ public class FormWin extends JFrame {
 		bt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regist();
+				
 			}
 		});
 	}
@@ -53,7 +56,16 @@ public class FormWin extends JFrame {
 		String title =t_title.getText();
 		String writer=t_writer.getText();
 		String content =t_content.getText();
-		bm.insert(title,writer,content);
+		Board board = new Board();
+		board.setTitle(title);
+		board.setWriter(writer);
+		board.setContent(content);
+		int result =bm.insert(board);
+		if(result==0) {
+			JOptionPane.showMessageDialog(this, "등록실패");
+		}else {
+			JOptionPane.showMessageDialog(this, "등록성공");
+		}
 	}
 	public static void main(String[] args) {
 		new FormWin();

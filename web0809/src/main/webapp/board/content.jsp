@@ -50,7 +50,7 @@ String password="1234";
 		//버튼 들 중 (버튼 배열) 첫번째 0번째 버튼에 이벤트 구현
 		$("#bt_regist").click(function() {
 			//폼양식을 이용하여 서버에 전송!!!!!!!!			
-			$("form").attr("action", "/board/regist");
+			$("form").attr("action", "/web0809/board/regist");
 			$("form").attr("method","post");
 			$("form").submit();
 		});
@@ -59,7 +59,7 @@ String password="1234";
 	 
 function edit(){
 	//수정폼을 서버에 전송하자
-	form1.action="/board/edit";
+	form1.action="/web0809/board/edit";
 	form1.method="post";
 	form1.submit();
 	 	

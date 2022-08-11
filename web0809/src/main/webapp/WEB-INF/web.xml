@@ -13,7 +13,7 @@
   
   <servlet-mapping>
   	<servlet-name>editServlet</servlet-name>
-  	<url-pattern>/board/edit</url-pattern>
+  	<url-pattern>/web0809/board/edit</url-pattern>
   </servlet-mapping>
   
   	
@@ -24,7 +24,7 @@
   	
   <servlet-mapping>
   	<servlet-name>registServlet</servlet-name>
-  	<url-pattern>/board/regist</url-pattern>
+  	<url-pattern>/web0809/board/regist</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -34,7 +34,7 @@
   	
   <servlet-mapping>
   	<servlet-name>deleteServlet</servlet-name>
-  	<url-pattern>/board/delete</url-pattern>
+  	<url-pattern>/web0809/board/delete</url-pattern>
   </servlet-mapping>
   
 </web-app>
