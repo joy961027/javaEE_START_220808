@@ -154,3 +154,5 @@ local.properties
 
 # Testing environment specific
 derby.log
+# server
+Servers/
