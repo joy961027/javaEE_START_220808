@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>구글맵을 연동한 SPA(Single Page Application)</title>
+<style>
+#wrapper {
+	width: 1800px;
+	height: 800px;
+	background: yellow;
+	margin: auto;
+	overflow: hidden; /*자식이 flow로뜨면 부모에서 이속성을 주자*/
+}
+
+#input-area {
+	width: 200px;
+	height: 100%;
+	background: pink;
+	float: left;
+}
+
+#map {
+	width: 1600px;
+	height: 100%;
+	background: gray;
+	float: left;
+}
+
+form * {
+	width: 95%;
+}
+
+#content {
+	height: 200px;
+}
+#preview{
+	height:170x;
+}
+</style>
+<script>
+
+
+function setMark(x,y,map) {
+	
+	var marker = new google.maps.Marker({
+		position : new google.maps.LatLng(x, y),
+		animation : google.maps.Animation.BOUNCE
+	});
+	marker.setMap(map);
+}
+
+function init() {
+	var mapProp = {
+			center : new google.maps.LatLng(37.4744508, 126.881709),
+			zoom : 10,
+		};
+	var map = new google.maps.Map(document.getElementById("map"), mapProp);
+	
+	setMark(37.4744508, 126.881709,map);
+	setMark(37.5754508, 126.881709,map);
+	setMark(37.3744508, 126.881709,map);
+	setMark(37.2754508, 126.881709,map);
+	setMark(37.6754508, 126.881709,map);
+	
+}
+function registAsync(){
+		var xhttp = new XMLHttpRequest();
+		var lati= document.getElementById("lati").value;
+		var longi =document.getElementById("longi").value;
+		var icon =document.getElementById("icon").value;
+		var content =document.getElementById("content").value;
+
+		
+		
+		
+		//응답받았을때 발생하는 이벤트 처리
+		xhttp.onreadystatechange = function() {
+    		if (this.readyState == 4 && this.status == 200) { //서버의 응답처리 성공했고, 결과가 클라이어언트 도착
+      			alert("서버가 나한테 보낸 데이터는 " +this.responseText);
+    		}
+  		};
+		
+		xhttp.open("post","/map/regist",true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); //form 양식 효과
+		
+		//비동기 방식으로 서버에 요청할경우 서버가 언제 응답할지 시점을 예측할수 없음
+		//따라서 개발자는 서버로부터 온 응답정보가 도착할때 발생하는 이벤트를 이용하면 됨.
+		xhttp.send("lati="+lati+"&longi="+longi+"&icon="+icon+"&content="+content);
+		console.log("hahahah");
+	}
+	
+addEventListener("load",function(){
+	document.getElementById("icon").addEventListener("change",function(){
+		document.getElementById("preview").src ="/res/images/"+this.value;
+	});
+	
+	document.querySelector("button").addEventListener("click",function(){
+		registAsync();//ajax를 이용하여 비ㅣ동기방식으로 새로고침없이 mysql에 등록
+	});
+});
+</script>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="input-area">
+			입력폼
+			<form>
+				<input type="text" placeholder="위도" id="lati"> 
+				<input type="text" placeholder="경도" id="longi"> 
+				<select id="icon">
+						<option>마커선택</option>
+						<option value="mark1.png">웃는 사람</option>
+						<option value="mark2.png">마커</option>
+						<option value="mark3.png">스마일</option>
+						<option value="mark4.png">팔든 사람</option>
+						<option value="mark5.png">체크</option>
+				</select>
+				<img id="preview">
+				<textarea id="content" name="content"></textarea>
+			</form>
+			<button type="button">등록</button>
+		</div>
+		<div id="map">맵</div>
+	</div>
+</body>
+</html>
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAdx-ir9FCp9IGZaonomg3YLz4BscX2Wg&callback=init"></script>
