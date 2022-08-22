@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Document</title>
+<style>
+body {
+	margin: 0px;
+}
+
+#wrapper {
+	width: 100%;
+	height: 700px;
+	background-color: aqua;
+	overflow: hidden;
+}
+
+#input-area {
+	width: 15%;
+	height: 100%;
+	background-color: yellow;
+	float: left;
+}
+
+#input-area * {
+	width: 95%;
+}
+
+#preview {
+	width: 95%;
+	height: 250px;
+}
+
+#map {
+	width: 85%;
+	height: 100%;
+	background-color: black;
+	float: left;
+}
+</style>
+<script>
+	var map;
+	//마커로 사용할 이미지 명을 동적으로 얻어오기
+	function getImg() {
+		var icon = document.getElementById("icon");
+		//없던 요소를 동적으로 만들때는 createElement()
+		var arr = [ "mark1.png", "mark2.png", "mark3.png", "mark4.png", "mark5.png" ];
+		for (var i = 0; i < 5; i++) {
+			var op = document.createElement("option"); //생성
+			//생성된 옵션 요소를 select요소에 자식으로 부착...
+			op.text = arr[i];
+			op.value = arr[i];
+			icon.add(op);
+		}
+	}
+	//비동기 방식으로 데이터 가져오기
+	function getList() {
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "/map/list");
+		xhttp.onreadystatechange = function() {
+			//요청이 도착했고(4) 서버가 에러잆이 정상응답을 한경우(200)에만
+			if (this.readyState == 4 && this.status == 200) {
+				console.log("방금 넣은 데이터는 : ", xhttp.responseText);
+				var jsonArray = JSON.parse(xhttp.responseText);
+				setMark(jsonArray);
+			}
+		};
+		xhttp.send();
+	}
+	
+	function getOne() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "/map/select");
+		xhttp.onreadystatechange = function() {
+			//요청이 도착했고(4) 서버가 에러잆이 정상응답을 한경우(200)에만
+			if (this.readyState == 4 && this.status == 200) {
+				var jsonArray = JSON.parse(xhttp.responseText);
+				setMark(jsonArray);
+			}
+		};
+		xhttp.send();
+	}
+	
+	//비동기 방식으로 post요청보내기
+	function regist() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST", "/map/regist");
+		xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		var lati = document.getElementsByName("lati")[0];
+		var longi = document.getElementsByName("longi")[0];
+		var icon = document.getElementById("icon");
+		var content = document.getElementsByName("content")[0];
+		//send()메서도 호출에 의해 비동기 전송이 발생한다..
+		//비동기 방식은 요청후, 서버의 응답이 언제 올지 알수가 없다. 따라서 xmlhttprequest객체는
+		//각종 이벤트를 지원한다
+		xhttp.onreadystatechange = function() {
+			//요청이 도착했고(4) 서버가 에러잆이 정상응답을 한경우(200)에만
+			if (this.readyState == 4 && this.status == 200) {
+				//alert(xhttp.responseText);서버가 보낸 컨텐츠 출력
+				//서버가 보낸 응답코드 분석하기
+				var obj = JSON.parse(xhttp.responseText);
+				console.log(obj.code);
+				if (obj.code == 1) {
+					alert("등록성공");
+					console.log(xhttp.responseText, obj.list)
+					setMark(obj.list);
+					//getOne();
+				} else {
+					alert("등록실패");
+				}
+			}
+		};
+		xhttp.send("lati=" + lati.value + "&longi=" + longi.value + "&icon="+ icon.value + "&content=" + content.value);
+
+	}
+	
+	function setMark(arr) {
+		for (var i = 0; i < arr.length; i++) {
+			var json = arr[i];
+			var marker = new google.maps.Marker({
+				position : new google.maps.LatLng(json.lati, json.longi),
+				animation : google.maps.Animation.BOUNCE,
+				icon : {
+					url : "/res/images/" + json.icon,
+					scaledSize : new google.maps.Size(35, 35)
+				}
+			});
+			marker.setMap(map);
+			
+			var infowindow = new google.maps.InfoWindow({
+				  content:json.content
+			});
+			infowindow.open(map,marker);
+			
+		}
+	}
+	
+	
+	function init() {
+		getImg();
+		//셀렉트박스에 이벤트 구현
+		document.getElementById("icon").addEventListener("change",function() {
+			document.getElementById("preview").src = "/res/images/"+ this.value;
+		});
+		document.querySelector("button").addEventListener("click", function() {
+			//location href="//...."get 방식 동기요청 페이지가 리로딩
+			//spa(single page application):하나짜리 페이지 프로그램 :Ajax기술로 제작된 웹페이지
+			regist();
+		});
+		//map 가운데 찍기
+		var mapProp = {
+			center : new google.maps.LatLng(37.4754608, 126.881709),
+			zoom : 16, //
+		};
+		map = new google.maps.Map(document.getElementById("map"), mapProp);
+		getList();//웹페이지를 열자마자 등록된 마커가 보여져야 하므로
+	}
+</script>
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="input-area">
+			<input type="text" placeholder="위도" name="lati" /> <input
+				type="text" placeholder="경도" name="longi" /> <select id="icon">
+				<option value="0">마커를 선택하세요</option>
+			</select> <img id="preview" />
+			<textarea rows="20" name="content"></textarea>
+			<button>등록</button>
+		</div>
+		<div id="map"></div>
+	</div>
+</body>
+
+</html>
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAdx-ir9FCp9IGZaonomg3YLz4BscX2Wg&callback=init"></script>
