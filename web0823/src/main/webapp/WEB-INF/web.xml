@@ -11,4 +11,15 @@
 		<servlet-name>registServlet</servlet-name>
 		<url-pattern>/news/regist</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>commentregistServlet</servlet-name>
+		<servlet-class>com.aca.web0823.news.CommentsRegist</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>commentregistServlet</servlet-name>
+		<url-pattern>/comments/regist</url-pattern>
+	</servlet-mapping>
+	
 </web-app>

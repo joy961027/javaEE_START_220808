@@ -1,6 +1,17 @@
+<%@page import="com.aca.web0823.domain.News"%>
+<%@page import="java.util.List"%>
+<%@page import="com.aca.web0823.news.model.NewsDAO"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%! 
+	NewsDAO newsDAO = new NewsDAO();
+%>
+
+
 <%
-int totalRecord =26;//모든 레코드 수
+List<News> newsList = newsDAO.selectAll();
+
+
+int totalRecord =newsList.size();//모든 레코드 수
 int pageSize =10; //한페이지당 보여질 레코드 수
 int totalPage=(int)Math.ceil((float)totalRecord/pageSize);
 int blockSize =10; //한 블럭당 보여질 페이지 수
@@ -10,8 +21,8 @@ if(request.getParameter("currentPage")!=null){
 }
 int firstPage=currentPage - (currentPage-1)%blockSize;
 int lastPage =firstPage +blockSize-1;
-int num = totalRecord-((currentPage-1)*pageSize); //페이지당 시작번호1page 26 2page 16, 3page 6
-
+int curPos = (currentPage-1)*pageSize; //페이지당 시작 index
+int num = totalRecord-(curPos); //페이지당 시작번호1page 26 2page 16, 3page 6
 		
 %>
 <%="totalRecord 는 " + totalRecord +"<br>" %>
@@ -25,6 +36,14 @@ int num = totalRecord-((currentPage-1)*pageSize); //페이지당 시작번호1pa
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -68,12 +87,15 @@ function regist(){
 		페이징 처리는 결국 데이터에 대한 산수 계산이므로 개발자마다 본인 스스로 로직을 개발해야 함.  -->
 		<%for(int i=0; i<pageSize; i++) { %>
 		<%if(num<1)break; %>
+		<%
+			News news= newsList.get(curPos++);
+		%>
 		<tr>
 			<td><%=num-- %></td>
-			<td>Smith</td>
-			<td>50</td>
-			<td>50</td>
-			<td>50</td>
+			<td><a href="/news/content.jsp?news_id=<%=news.getNews_id()%>"><%=news.getTitle() %></a></td>
+			<td><%=news.getWriter() %></td>
+			<td><%=news.getRegdate().substring(0,10) %></td>
+			<td><%=news.getHit()%></td>
 		</tr>
 		<%} %>
 		<tr>

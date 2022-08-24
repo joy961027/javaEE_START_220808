@@ -24,3 +24,6 @@ START WITH 1;
 CREATE SEQUENCE seq_comments
 INCREMENT BY 1
 START WITH 1;
+
+delete from comments;
+
