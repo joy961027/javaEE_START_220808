@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aca.web0823.domain.Comments;
+import com.aca.web0823.domain.News;
 import com.aca.web0823.pool.ConnectionManager;
 import com.aca.web0823.pool.PoolManager;
 
@@ -38,17 +39,29 @@ public class CommentsDAO {
 		
 		return result;
 	}
-	
-	public List selectAll(){
-		List list = new ArrayList<>();
+	//해당 뉴스기사와 관련된 모든 레코드 갸져오기
+	public List selectAll(int news_id){
 		Connection con =null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		List list = new ArrayList<Comments>();
 		con = manager.getConnection();
-		String sql = "select * from comments where news_id =?";
+		String sql = "select * from comments where news_id =? order by comments_id";
 		try {
 			pstmt=con.prepareStatement(sql);
-			
+			pstmt.setInt(1, news_id);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Comments comments = new Comments();
+				News news = new News();
+				comments.setCommetns_id(rs.getInt("comments_id"));
+				news.setNews_id(news_id);
+				comments.setNews(news);
+				comments.setDetail(rs.getString("detail"));
+				comments.setAuthor(rs.getString("author"));
+				comments.setWriteDate(rs.getString("writedate"));
+				list.add(comments);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {

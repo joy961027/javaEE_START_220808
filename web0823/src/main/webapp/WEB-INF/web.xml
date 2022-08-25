@@ -13,13 +13,42 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>commentregistServlet</servlet-name>
+		<servlet-name>deleteServlet</servlet-name>
+		<servlet-class>com.aca.web0823.news.DeleteServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>deleteServlet</servlet-name>
+		<url-pattern>/news/delete</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<servlet>
+		<servlet-name>commentRegist</servlet-name>
 		<servlet-class>com.aca.web0823.news.CommentsRegist</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>commentregistServlet</servlet-name>
+		<servlet-name>commentRegist</servlet-name>
 		<url-pattern>/comments/regist</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>commentList</servlet-name>
+		<servlet-class>com.aca.web0823.news.CommentsList</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>commentList</servlet-name>
+		<url-pattern>/comments/list</url-pattern>
+	</servlet-mapping>
+	
 	
 </web-app>

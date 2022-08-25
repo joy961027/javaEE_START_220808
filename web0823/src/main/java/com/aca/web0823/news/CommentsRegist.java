@@ -2,6 +2,7 @@ package com.aca.web0823.news;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,7 @@ public class CommentsRegist extends HttpServlet {
 		comments.setNews(news); //comments DTO안에 NEWS DTO넣기 자식이 부모를 HAS A로 보유했기 때문에
 		
 		commentsDAO.insert(comments);
+		List<Comments> commentsList = commentsDAO.selectAll(Integer.parseInt(news_id));
 		//클라이언트가 비동기방식으로 요청을 한다는 것은, 전체 html디자인을 바꾸겠다는 것이 아니라 현재 디자인 페이지는 유지하되 
 		//오직 데이터만 주고받기 위함이다 따라서 
 		PrintWriter out = response.getWriter();
@@ -44,7 +46,7 @@ public class CommentsRegist extends HttpServlet {
 		
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(comments);
+		String json = gson.toJson(commentsList);
 		out.print(json); 
 	}
 

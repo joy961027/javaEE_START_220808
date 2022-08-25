@@ -60,20 +60,30 @@ public class NewsDAO {
 		ResultSet rs=null;
 		List<News> list= new ArrayList<News>();
 		con= manager.getConnection();
-		String sql = "select * from news order by news_id desc";
+		
+		//일단 메모리상에 생성된 스트링은 절대 수정이 불가능한 불변(immutable)의 특징을 가지므로
+		//아래와 같이 string을 대상으로 누적시키거나, 반복문을 돌릴경우 성능메 누제가 발생한다
+		//해겨책 ? 수정가능한 버퍼처리된 string객체를 이용한다, stringBUilder, stringBUffer
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT news_id,TITLE,WRITER ,REGDATE ,HIT, count(cnew) as cnt FROM");
+		sb.append(" (");
+		sb.append(" SELECT TITLE,WRITER ,REGDATE ,HIT, N.NEWS_ID AS NEWS_ID,c.news_id as cnew");
+		sb.append(" FROM NEWS n  LEFT OUTER JOIN COMMENTS c");
+		sb.append(" ON n.NEWS_ID = c.NEWS_ID");
+		sb.append(" ) GROUP BY news_id,title,writer,regdate,hit order by news_id desc");
 		try {
-			pstmt= con.prepareStatement(sql);
+			pstmt= con.prepareStatement(sb.toString());
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				News news = new News();
 				news.setNews_id(rs.getInt("news_id"));
 				news.setTitle(rs.getString("title"));
 				news.setWriter(rs.getString("writer"));
-				news.setContent(rs.getString("content"));
 				news.setRegdate(rs.getString("regdate"));
 				news.setHit(rs.getInt("hit"));
+				news.setCnt(rs.getInt("cnt")); //댓글수
 				list.add(news);
-				
+				System.out.println(sb.toString());
 			}
 			
 		} catch (SQLException e) {
@@ -119,8 +129,36 @@ public class NewsDAO {
 		String sql = "update news set title=?, writer=?, cotent=? where news_id=?";
 	}
 	//d
-	public void delete() {
-		String sql = "delete news where news_id =?";
+	public int delete(int news_id) {
+		Connection con =null;
+		PreparedStatement pstmt=null;
+		ResultSet rs = null;
+		int result = 0;
+		//자식이 있는지 조회
+		con = manager.getConnection();
+		String sql = "select * from comments where news_id=?";
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, news_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) { //자식이 있다면 즉 댓글이 있다면
+				sql="update news set title='원본이 삭제된 게시물입니다',writer='', content='냉무' where news_id=?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, news_id);
+				result = pstmt.executeUpdate();
+			}else {//자식이 없다면 
+				sql="delete from news where news_id =?";
+				pstmt= con.prepareStatement(sql);
+				pstmt.setInt(1, news_id);
+				result = pstmt.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			manager.freeConnection(con, pstmt, rs);
+		}
+		return result;
 	}
 	
 }
