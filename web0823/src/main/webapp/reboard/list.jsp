@@ -76,10 +76,10 @@ $(document).ready(function(){
 			<tr>
 				<td><%=num-- %></td>
 				<td>
-					<a href="/reboard/content.jsp?reboard_id=<%=reBoard.getReboard_id()%>">
-						<%=reBoard.getTitle() %>
-						<img id="reply" src ="/res/images/reply.png">
-					</a>
+					<%if(reBoard.getDepth()>0){ %>
+						<img id="reply" src ="/res/images/reply.png" style="margin-left:<%=reBoard.getDepth()*20%>px">
+					<% }%>
+					<a href="/reboard/content.jsp?reboard_id=<%=reBoard.getReboard_id()%>"><%=reBoard.getTitle() %></a>	
 				</td>
 				<td><%=reBoard.getWriter() %></td>
 				<td><%=reBoard.getRegdate() %></td>
