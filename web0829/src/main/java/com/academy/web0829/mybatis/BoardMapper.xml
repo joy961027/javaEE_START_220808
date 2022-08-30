@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="babo">
+<mapper namespace="Board">
 	
 	<!--
 		앞으로 쿼리문은 java클래스안에 두지 말고, mybatis의 xml에 작성하자
@@ -10,12 +10,27 @@
 	  	개발자가 쿼리문에 집중할수 있고, 유지보수성을 올리기 위해 SQL Mapper중 하나인
 	  	Mybatis 프레임 웍을 이용한다 (Hibernate와 mybatis와는 약간의 차이가 있음)
 	-->
-	<insert id="insert" parameterType="com.academy.web0829.domain.Board">
+	<!-- 입력 -->
+	<insert id="insert" parameterType="Board">
 		insert into board(title, writer, content) values(#{title},#{writer},#{content})
 	</insert>
-	
-	<select id="select" resultType="com.academy.web0829.domain.Board">
-		select * from board order by board_id desc
+	<!--  모두 가져오기 -->
+	<select id="selectAll" resultType="Board">
+		select board_id,title,writer,content,regdate,hit from board order by board_id desc
 	</select>
 	
+	<!-- 한건 가져오기 -->
+	<select id="select" resultType="Board" parameterType="int">
+		select board_id,title,writer,content,regdate,hit from board where board_id =#{board_id}
+	</select>
+	
+	<!-- 수정 -->
+	<update id="update" parameterType="Board">
+		update board set title = #{title} ,writer=#{writer} ,content=#{content} where board_id =#{board_id} 
+	</update>
+	
+	<!-- 삭제 -->
+	 <delete id="delete" parameterType="int">
+	 	delete from board where board_id =#{board_id}	
+	 </delete>
 </mapper>
