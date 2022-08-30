@@ -1,4 +1,4 @@
-package com.academy.web0829.domain;
+ package com.academy.web0829.domain;
 
 import lombok.Data;
 

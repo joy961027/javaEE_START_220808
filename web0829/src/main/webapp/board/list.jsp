@@ -1,23 +1,19 @@
+<%@page import="com.academy.web0829.util.Pager"%>
 <%@page import="java.util.List"%>
 <%@page import="com.academy.web0829.domain.Board"%>
 <%@page import="com.academy.web0829.board.repository.BoardDAO"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%! BoardDAO boardDAO  = new BoardDAO(); %>
+<%! BoardDAO boardDAO  = new BoardDAO(); 
+	  Pager pager = new Pager();
+%>
 <%
 	List <Board> boardList = boardDAO.selectAll();
-
-	int totalRecord = boardList.size();
-	int pageSize = 10;
-	int blockSize =10;
-	int totalPage=(int)Math.ceil((float)totalRecord/pageSize);
-	int currentPage = 1;
-	if(request.getParameter("currentPage")!=null){
-		currentPage = Integer.parseInt(request.getParameter("currentPage"));
-	}
-	int firstPage = currentPage -((currentPage-1)%blockSize);
-	int lastPage = firstPage +blockSize-1;
-	int curPos = (currentPage-1)*pageSize; //페이지당 시작 index 1page 0 2page 10  3page 20
-	int num =  totalRecord-(curPos); //페이지당 시작번호1page 26 2page 16, 3page 6
+	pager.init(boardList, request);
+	//jsp의 내장객체중 application 내장객체의 생명력을 테스트해보자
+	//이름 그대로 application(웹어플리케이션)은 톰캣서버를  가동할때 생성 되어
+	// 프로그램이 끝날때 까지 즉 톰캣 서버를 종료할때 까지 생명력을 유지 할 수 있음
+	//어플리케이션 스코프
+	out.print(application.getAttribute("nick"));
 %>
 <!DOCTYPE html>
 <html>
@@ -73,12 +69,15 @@ function regist(){
 		</tr>
 		<!-- 하나의 페이지에 너무 많은 데이터가 있을경우, 원하는 크기로 분리하여 보여주는 기법을 페이징 처리라 한다
 		페이징 처리는 결국 데이터에 대한 산수 계산이므로 개발자마다 본인 스스로 로직을 개발해야 함.  -->
-		<%for(int i=0; i<pageSize; i++) {%>
-		<%if(num<1)break;%>
-		<%	Board board  = boardList.get(curPos++); %>
+		<% int curPos = pager.getCurPos();
+			  int num = pager.getNum();
+		%>
+		<%for(int i=1; i<=pager.getPageSize(); i++){ %>
+		<%if(num<1)break; %>
+		<% Board board = boardList.get(curPos++); %>
 		<tr>
-			<td><%=num--%></td>
-			<td><%=board.getTitle() %></td>
+			<td><%=num-- %></td>
+			<td><a href="/board/content.jsp?board_id=<%=board.getBoard_id()%>"><%=board.getTitle()%></a></td>
 			<td><%=board.getWriter() %></td>
 			<td><%=board.getRegdate() %></td>
 			<td><%=board.getHit() %></td>
@@ -86,7 +85,14 @@ function regist(){
 		<%} %>
 		
 		<tr>
-			<td colspan="5" style="text-align:center;"></td>
+			<td colspan="5" style="text-align:center;">
+			<a href="/board/list.jsp?currentPage=<%=pager.getFirstPage()-1%>">◀</a>
+			<%for (int i= pager.getFirstPage(); i<=pager.getLastPage(); i++) {%>
+			<% if(i>pager.getTotalPage())break; %>
+			<a href="/board/list.jsp?currentPage=<%=i%>">[<%=i %>]</a>
+			<%} %>
+			<a href="/board/list.jsp?currentPage=<%=pager.getLastPage()+1%>">▶</a>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="5"><button onClick="regist()">글 작성</button></td>

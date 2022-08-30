@@ -11,43 +11,53 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.academy.web0829.domain.Board;
+import com.academy.web0829.mybatis.ConfigManager;
 
 public class BoardDAO {
-
+	ConfigManager configManager = ConfigManager.getInstance();
+	
+	//한건 넣기
 	public int insert(Board board) {
+		SqlSession sqlSession = configManager.getSqlSession(); //mybatis 쿼리 수행 객체		
+				//여기서 SQL문 작성 하지 말고 ,xml에 작성된 쿼리문을 호출 하자
+		int result=sqlSession.insert("Board.insert", board);
+		sqlSession.commit();//트랜잭션 확정이 아님 
+		configManager.closeSqlSession(sqlSession);
+		return result;
+	}
+	//목록 가져오기
+	public List<Board> selectAll() {
+		SqlSession sqlSession = configManager.getSqlSession();
+		List<Board> boardList = null;
+		boardList = sqlSession.selectList("Board.selectAll");
+		configManager.closeSqlSession(sqlSession);
+		return boardList;
+	}
+	
+	public Board select(int board_id) {
+		SqlSession sqlSession = configManager.getSqlSession();
+		Board board = null;
+		board = sqlSession.selectOne("Board.select", board_id);
+		configManager.closeSqlSession(sqlSession);
+		return board;
+	}
+	
+	public int update(Board board) {
 		int result=0;
-		
-		//여기서 SQL문 작성 하지 말고 ,xml에 작성된 쿼리문을 호출 하자
-		
-		
-		
-		
+		SqlSession sqlSession = configManager.getSqlSession();
+		result = sqlSession.update("Board.update", board);
+		sqlSession.commit();
+		configManager.closeSqlSession(sqlSession);
 		return result;
 	}
 	
-	public List<Board> selectAll() {
-		String resource = "com/academy/web0829/mybatis/config.xml";
-		InputStream inputStream =null;
-		List<Board> boardList = null;
-		try {
-			inputStream = Resources.getResourceAsStream(resource);
-			SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
-			//mybatis를 이용하면 쿼리문을 수행하기 위한 객체인 sqlSession객체를 이용하여 sql문을 호출할 수 있다.
-			SqlSession session =  factory.openSession();
-			boardList=  session.selectList("babo.select");
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-			if(inputStream!=null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return boardList;
+	public int delete(int board_id) {
+		int result=0;
+		SqlSession sqlSession = configManager.getSqlSession();
+		result =sqlSession.delete("Board.delete",board_id);
+		sqlSession.commit();
+		configManager.closeSqlSession(sqlSession);
+		return result;
 	}
 	
 }
