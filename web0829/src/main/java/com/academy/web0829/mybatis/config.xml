@@ -5,16 +5,20 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.academy.web0829.domain.Board" alias="Board"/>
+		<typeAlias type="com.academy.web0829.domain.Dept" alias="Dept"/>
+		<typeAlias type="com.academy.web0829.domain.Emp" alias="Emp"/>
 	</typeAliases>
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="JNDI">
-				<property name="data_source" value="java:comp/env/jdbc/mysql" />
+				<property name="data_source" value="java:comp/env/jdbc/myoracle" />
 			</dataSource>
 		</environment>
 	</environments>
 	<mappers>
 		<mapper resource="com/academy/web0829/mybatis/BoardMapper.xml" />
+		<mapper resource="com/academy/web0829/mybatis/DeptMapper.xml" />
+		<mapper resource="com/academy/web0829/mybatis/EmpMapper.xml" />
 	</mappers>
 </configuration>
