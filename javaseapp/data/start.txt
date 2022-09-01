@@ -1,0 +1,4 @@
+zerg=fast
+protoss=strong
+terran=weak
+/movie.do=com.aca.md2app.movie.controller.MovieController
