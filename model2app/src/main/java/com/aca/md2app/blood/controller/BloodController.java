@@ -14,9 +14,12 @@ public class BloodController implements Controller{
 		request.setAttribute("data", msg);
 		
 	}
-	public String getViewPage() {
-		return "/blood/advice.jsp";
+	public String getViewName() {
+		return "/blood/result";
 	}
-	
+	@Override
+	public boolean isForward() {
+		return true;
+	}
 }
 

@@ -1,5 +1,6 @@
 package com.aca.md2app.movie.controller;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,8 +22,13 @@ public class MovieController implements Controller{
 		request.setAttribute("data", msg);
 	}
 	//형님컨트롤러가 어떤 뷰페이지를 보여줘야 할지를 여기서 결정해보다
-	public String getViewPage() {
-		return "/movie/result.jsp";
+	public String getViewName() {
+		return "/movie/result";
+	}
+	
+	@Override
+	public boolean isForward() {
+		return true;
 	}
 
 }

@@ -4,10 +4,28 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	id="WebApp_ID" version="4.0">
 	<display-name>model2app</display-name>
+	<!-- 
+		톰켓이 가동될때를 감지하는 리스너를 활용해보자
+		서버가 가동될때 메모레이 올리고 싶은 객체 등이 있을때..
+		
+	 -->
+	<listener>
+		<listener-class>com.aca.md2app.listener.MyListener</listener-class>
+	</listener>
+	
+	<context-param><!-- 서버가 켜질때 리스너의 전달해주고 싶은 파라미터 -->
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/mapping.properties</param-value>	
+	</context-param>
 
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>com.aca.md2app.controller.DispatcherServlet</servlet-class>
+		<!-- 이서블릿이 init()에 의해 초기화 될때 개발자가 전달하고 싶은 데이터가 있다면 아래의 태그를 이용할수 있다. -->
+		<!-- <init-param>서블릿이 켜질때 서블릿의 전달해주고 싶은 파라미터
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/mapping.properties</param-value>	
+		 </init-param>-->
 	</servlet>
 
 	<servlet-mapping>
