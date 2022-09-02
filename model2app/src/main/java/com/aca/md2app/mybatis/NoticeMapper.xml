@@ -35,7 +35,7 @@
 	</insert>
 	
 	<!-- 한건 수정 -->
-	<update id="update" parameterType="Notice">
+	<update id="update" parameterType="Notice" > 
 		update notice set title=#{title}, writer =#{writer}, content=#{content} where notice_id=#{notice_id}
 	</update>
 	

@@ -5,6 +5,7 @@
 <configuration>
 <typeAliases>
 	<typeAlias type="com.aca.md2app.domain.Notice" alias="Notice"/>
+	<typeAlias type="com.aca.md2app.domain.Gallery" alias="Gallery"/>
 	</typeAliases>
 	<environments default="development">
 		<environment id="development">
@@ -16,6 +17,7 @@
 	</environments>
 	<mappers>
 		<mapper resource="com/aca/md2app/mybatis/NoticeMapper.xml" />
+		<mapper resource="com/aca/md2app/mybatis/GalleryMapper.xml" />
 	</mappers>
 	
 </configuration>

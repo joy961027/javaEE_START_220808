@@ -15,7 +15,8 @@ $(function(){
 		//서버에 요청
 		$("form").attr({
 			method:"post",
-			action:"/notice/regist.do"
+			action:"/gallery/regist.do",
+			enctype:"multipart/form-data" /*바이너리 파일이 포함될 경우 반드시 이속성이 지정되어야 한다.*/
 		});
 		$("form").submit();
 	});
@@ -38,6 +39,9 @@ $(function(){
     
     <div class="form-group">
 		<textarea class="form-control" placeholder= "내용을 입력해주세요" name="content" required></textarea>
+    </div>
+    <div class="form-group">
+		<input type="file" name="photo">    
     </div>
     <button type="button" class="btn btn-primary">글 작성</button>
   </form>
