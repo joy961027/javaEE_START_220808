@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	
+	<bean id="elecPan" class="com.aca.springbasicapp.cook.ElecPan" />
+	<bean id="friPan" class="com.aca.springbasicapp.cook.FriPan" />
+	<bean id="chef" class="com.aca.springbasicapp.cook.Chef">
+		<!-- 특정 bean을 다른 bean에 주입시키는것을 xml로 표현 할때 weaving(엮다)한다라고 표현 -->
+		<property name="pan" ref="friPan" />
+	</bean>
+
+	<!-- 윈도우 창과 그 재료들을 엮어본다 -->
+	<bean id="jTextArea" class="javax.swing.JTextArea">
+		<constructor-arg index="0" value="20" />
+		<constructor-arg index="1" value="15" />
+	</bean>
+	<bean id="jTextField" class="javax.swing.JTextField">
+		<constructor-arg type="int" value="20" />
+	</bean>
+	<bean id="jButton" class="javax.swing.JButton">
+		<constructor-arg type="java.lang.String" value="나 버튼" />
+	</bean>
+	<!--MyWin과 그 재료들을 위빙한다 -->
+	<bean id="myWin" class="com.aca.springbasicapp.gui.MyWin">
+		<property name="area" ref="jTextArea"></property>
+		<property name="t_input" ref="jTextField"></property>
+		<property name="bt" ref="jButton"></property>
+	</bean>
+	<bean id="schoolBell" class="com.aca.springbasicapp.school.SchoolBell" />
+	<bean id="student" class="com.aca.springbasicapp.school.Student" />
+
+	<!-- aop -->
+	<aop:config>
+		<aop:aspect ref="schoolBell">
+			<aop:pointcut id="bellPointcut" expression="execution(public * com.aca.springbasicapp.school.*.*(..))" />
+			<aop:before method="sound" pointcut-ref="bellPointcut" />
+		</aop:aspect>
+	</aop:config>
+
+</beans>
